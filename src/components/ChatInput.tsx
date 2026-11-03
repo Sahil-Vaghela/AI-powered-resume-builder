@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Send, SkipForward, ArrowLeft, Plus, Check } from 'lucide-react';
+import { Send, ArrowLeft, Plus, Check } from 'lucide-react';
 import { QuestionDef, getSuggestionsForQuestion, getOptionsForQuestion, getSummarySuggestions } from '../engine/questionEngine';
 import { validateInput } from '../engine/validationEngine';
 import skillsData from '../data/skills.json';
@@ -96,20 +96,8 @@ export const ChatInput: React.FC<ChatInputProps> = ({
       return;
     }
 
-    if (question) {
-      const validationResult = validateInput(
-        valueToValidate,
-        question.validationRule,
-        question.validation,
-        question.required
-      );
-
-      if (!validationResult.isValid) {
-        setError(validationResult.errorMessage || 'Please enter a valid answer.');
-        return;
-      }
-    } else {
-      if (!textValue.trim()) return;
+    if (typeof valueToValidate === 'string') {
+      if (!valueToValidate.trim()) return;
     }
 
     setError(null);
@@ -165,24 +153,24 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     <div className="w-full max-w-3xl mx-auto px-4 pb-5 pt-2">
       {/* Validation Error Message */}
       {error && (
-        <div className="mb-2 text-xs font-semibold text-[#C77D86] px-3.5 py-1.5 rounded-xl neu-inset animate-fadeIn text-center">
+        <div className="mb-2 text-xs font-semibold text-[#C77D86] bg-[#FFF5F5] border border-[#FED7D7] px-3.5 py-1.5 rounded-xl animate-fadeIn text-center shadow-xs">
           {error}
         </div>
       )}
 
-      {/* 1. Skill Selector Overlay within bottom area */}
+      {/* 1. Skill Selector Overlay */}
       {question?.type === 'skill_selector' && (
-        <div className="mb-3 p-3.5 rounded-2xl neu-raised space-y-3">
+        <div className="mb-3 p-4 rounded-2xl bg-white border border-[#E9EDE9] shadow-sm space-y-3">
           <div className="flex flex-wrap gap-1.5">
             {skillsData.categories.map((cat) => (
               <button
                 key={cat.id}
                 type="button"
                 onClick={() => setActiveSkillCategory(cat.id)}
-                className={`text-xs px-2.5 py-1 rounded-xl font-medium transition cursor-pointer ${
+                className={`text-xs px-3 py-1.5 rounded-xl font-medium transition cursor-pointer ${
                   activeSkillCategory === cat.id
-                    ? 'neu-pressed text-[#7776B8]'
-                    : 'neu-button-secondary text-[#34364A]'
+                    ? 'bg-[#087A50] text-white font-bold shadow-xs'
+                    : 'bg-[#FAFAF8] text-[#4B5750] border border-[#E9EDE9] hover:bg-[#DDF2E8] hover:text-[#087A50]'
                 }`}
               >
                 {cat.name}
@@ -196,7 +184,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             const selectedInCat = selectedSkills[activeSkillCategory] || [];
             return (
               <div className="space-y-2">
-                <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto p-1">
+                <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto p-1">
                   {currentSkills.map((sk) => {
                     const isSelected = selectedInCat.includes(sk);
                     return (
@@ -204,31 +192,31 @@ export const ChatInput: React.FC<ChatInputProps> = ({
                         key={sk}
                         type="button"
                         onClick={() => toggleSkill(activeSkillCategory, sk)}
-                        className={`text-xs px-2.5 py-1 rounded-xl transition cursor-pointer font-medium flex items-center gap-1 ${
+                        className={`text-xs px-2.5 py-1.5 rounded-xl transition cursor-pointer font-medium flex items-center gap-1.5 ${
                           isSelected
-                            ? 'neu-pressed text-[#6D9B83]'
-                            : 'neu-subtle text-[#34364A]'
+                            ? 'bg-[#DDF2E8] text-[#087A50] border border-[#087A50] font-semibold'
+                            : 'bg-white text-[#4B5750] border border-[#E9EDE9] hover:border-[#087A50]/40'
                         }`}
                       >
-                        {isSelected && <Check className="w-3 h-3 text-[#6D9B83]" />}
+                        {isSelected && <Check className="w-3.5 h-3.5 text-[#087A50]" />}
                         <span>{sk}</span>
                       </button>
                     );
                   })}
                 </div>
-                <div className="flex items-center gap-2 pt-1 border-t border-[#C8CAD4]/30">
+                <div className="flex items-center gap-2 pt-2 border-t border-[#E9EDE9]">
                   <input
                     type="text"
                     value={customSkillInput}
                     onChange={(e) => setCustomSkillInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomSkill())}
                     placeholder={`+ Add custom skill to ${currentCat?.name || 'category'}...`}
-                    className="flex-1 text-xs px-3 py-1.5 rounded-xl neu-input"
+                    className="flex-1 text-xs px-3 py-2 rounded-xl border border-[#E9EDE9] focus:outline-none focus:border-[#087A50]"
                   />
                   <button
                     type="button"
                     onClick={addCustomSkill}
-                    className="text-xs px-3 py-1.5 neu-button-secondary text-[#7776B8] rounded-xl font-semibold cursor-pointer"
+                    className="text-xs px-3 py-2 bg-white border border-[#E9EDE9] text-[#087A50] hover:bg-[#DDF2E8] rounded-xl font-semibold cursor-pointer transition"
                   >
                     Add
                   </button>
@@ -238,16 +226,16 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           })()}
 
           <div className="flex items-center justify-between pt-1">
-            <span className="text-xs text-[#7E8494]">
+            <span className="text-xs text-[#78847D]">
               Selected:{' '}
-              <strong className="text-[#34364A]">
+              <strong className="text-[#202923] font-bold tabular-nums">
                 {Object.values(selectedSkills).reduce((acc, arr) => acc + arr.length, 0)}
               </strong>
             </span>
             <button
               type="button"
               onClick={() => handleSend()}
-              className="text-xs px-4 py-2 neu-button-primary rounded-xl font-bold cursor-pointer"
+              className="text-xs px-4 py-2 bg-[#087A50] hover:bg-[#065F46] text-white rounded-xl font-bold cursor-pointer transition shadow-xs"
             >
               Confirm Skills
             </button>
@@ -263,7 +251,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               key={opt.value}
               type="button"
               onClick={() => handleSend(opt.value)}
-              className="text-xs px-3.5 py-2 rounded-xl neu-raised hover:neu-raised-hover active:neu-pressed text-[#34364A] hover:text-[#7776B8] font-semibold cursor-pointer transition"
+              className="text-xs px-4 py-2 rounded-xl bg-white border border-[#E9EDE9] hover:border-[#087A50] hover:bg-[#DDF2E8] hover:text-[#087A50] text-[#202923] font-semibold cursor-pointer transition shadow-xs"
             >
               {opt.label}
             </button>
@@ -279,7 +267,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               key={idx}
               type="button"
               onClick={() => setTextValue(s)}
-              className="text-[11px] px-2.5 py-1 rounded-xl neu-subtle hover:neu-raised text-[#7E8494] hover:text-[#34364A] cursor-pointer transition"
+              className="text-[11px] px-2.5 py-1 rounded-xl bg-white border border-[#E9EDE9] hover:border-[#087A50] hover:bg-[#DDF2E8] text-[#4B5750] hover:text-[#087A50] cursor-pointer transition shadow-xs"
             >
               {s}
             </button>
@@ -289,19 +277,19 @@ export const ChatInput: React.FC<ChatInputProps> = ({
 
       {/* 4. Multi-tag Chips (Languages, Interests) */}
       {question?.type === 'multi_tag_selector' && (
-        <div className="mb-2.5 p-3 rounded-2xl neu-raised space-y-2">
+        <div className="mb-2.5 p-3.5 rounded-2xl bg-white border border-[#E9EDE9] shadow-sm space-y-2">
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded-xl neu-inset text-[#34364A] font-medium"
+                  className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-xl bg-[#DDF2E8] text-[#087A50] border border-[#087A50]/20 font-medium"
                 >
                   <span>{tag}</span>
                   <button
                     type="button"
                     onClick={() => toggleTag(tag)}
-                    className="text-[#7E8494] hover:text-[#C77D86] cursor-pointer text-sm"
+                    className="text-[#087A50] hover:text-[#C77D86] cursor-pointer text-sm font-bold"
                   >
                     ×
                   </button>
@@ -316,19 +304,19 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               onChange={(e) => setCustomTagInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomTag())}
               placeholder="Type and add or pick suggestions above..."
-              className="flex-1 text-xs px-3 py-1.5 rounded-xl neu-input"
+              className="flex-1 text-xs px-3 py-2 rounded-xl border border-[#E9EDE9] focus:outline-none focus:border-[#087A50]"
             />
             <button
               type="button"
               onClick={addCustomTag}
-              className="text-xs px-3 py-1.5 neu-button-secondary text-[#7776B8] rounded-xl font-semibold cursor-pointer"
+              className="text-xs px-3 py-2 bg-white border border-[#E9EDE9] text-[#087A50] hover:bg-[#DDF2E8] rounded-xl font-semibold cursor-pointer transition"
             >
               Add
             </button>
             <button
               type="button"
               onClick={() => handleSend()}
-              className="text-xs px-3.5 py-1.5 neu-button-primary rounded-xl font-bold cursor-pointer"
+              className="text-xs px-3.5 py-2 bg-[#087A50] hover:bg-[#065F46] text-white rounded-xl font-bold cursor-pointer transition shadow-xs"
             >
               Save
             </button>
@@ -339,12 +327,12 @@ export const ChatInput: React.FC<ChatInputProps> = ({
       {/* 5. Summary Generator Options */}
       {question?.type === 'summary_generator' && (
         <div className="mb-2.5 flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
-          {getSummarySuggestions(resume.career.experienceLevel).map((tpl, i) => (
+          {getSummarySuggestions(resume.career?.experienceLevel, resume.personal?.professionalTitle).map((tpl, i) => (
             <button
               key={i}
               type="button"
               onClick={() => setTextValue(tpl.text)}
-              className="text-[11px] px-2.5 py-1 rounded-xl neu-subtle text-[#34364A] hover:text-[#7776B8] text-left line-clamp-1 cursor-pointer"
+              className="text-[11px] px-3 py-1.5 rounded-xl bg-white border border-[#E9EDE9] text-[#4B5750] hover:text-[#087A50] hover:border-[#087A50] hover:bg-[#DDF2E8] text-left line-clamp-1 cursor-pointer transition shadow-xs"
             >
               ✦ {tpl.category}
             </button>
@@ -352,26 +340,26 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         </div>
       )}
 
-      {/* One Large ChatGPT-Style Chat Input Box */}
+      {/* ChatGPT-Style Chat Input Box */}
       {question?.type !== 'skill_selector' && (
-        <div className="relative flex items-center rounded-2xl neu-inset bg-[#E9EAF2] p-1.5 pl-3 sm:pl-4 transition-all min-w-0">
+        <div className="relative flex items-center rounded-2xl bg-white border border-[#E9EDE9] shadow-sm focus-within:border-[#087A50] focus-within:ring-2 focus-within:ring-[#087A50]/15 p-1.5 pl-4 transition-all min-w-0">
           <input
             type="text"
             value={textValue}
             onChange={(e) => setTextValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={question?.placeholder || "Message ResumeCraft..."}
-            className="flex-1 min-w-0 bg-transparent text-xs sm:text-sm text-[#34364A] placeholder:text-[#7E8494] focus:outline-none pr-1.5 sm:pr-2 py-2 sm:py-2.5"
+            placeholder={question?.placeholder || "Tell me more or provide additional details..."}
+            className="flex-1 min-w-0 bg-transparent text-xs sm:text-sm text-[#202923] placeholder:text-[#78847D] focus:outline-none pr-2 py-2 sm:py-2.5"
             autoFocus
           />
 
-          <div className="flex items-center gap-1 sm:gap-1.5 pr-0.5 sm:pr-1 shrink-0">
+          <div className="flex items-center gap-1.5 pr-1 shrink-0">
             {question?.skipAllowed && onSkip && (
               <button
                 type="button"
                 onClick={onSkip}
                 title="Skip optional question"
-                className="text-[11px] sm:text-xs text-[#7E8494] hover:text-[#34364A] px-2 py-1.5 rounded-xl hover:neu-subtle transition cursor-pointer min-h-[36px] flex items-center"
+                className="text-[11px] sm:text-xs text-[#78847D] hover:text-[#202923] px-2.5 py-1.5 rounded-xl hover:bg-[#FAFAF8] transition cursor-pointer min-h-[36px] flex items-center font-medium"
               >
                 Skip
               </button>
@@ -381,10 +369,10 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               type="button"
               onClick={() => handleSend()}
               disabled={isSubmitting || (question?.required && !textValue.trim())}
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl neu-button-primary disabled:opacity-40 flex items-center justify-center cursor-pointer transition shrink-0 min-h-[36px] min-w-[36px]"
+              className="w-9 h-9 rounded-xl bg-[#087A50] hover:bg-[#065F46] active:bg-[#054835] text-white disabled:opacity-40 flex items-center justify-center cursor-pointer transition shrink-0 min-h-[36px] min-w-[36px] shadow-xs active:scale-95"
               aria-label="Send message"
             >
-              <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <Send className="w-4 h-4" />
             </button>
           </div>
         </div>

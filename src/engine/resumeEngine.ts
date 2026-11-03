@@ -1,6 +1,8 @@
 export interface PersonalInfo {
   fullName: string;
   professionalTitle: string;
+  industry?: string;
+  occupationDescription?: string;
   email: string;
   phone: string;
   location: string;

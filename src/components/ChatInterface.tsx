@@ -4,9 +4,11 @@ import {
   Layout,
   FileText,
   FilePlus2,
-  Lightbulb,
+  GraduationCap,
+  Briefcase,
   Eye,
   PanelLeft,
+  FileSpreadsheet,
 } from 'lucide-react';
 import { ChatMessageItem } from './ChatMessage';
 import { ChatInput } from './ChatInput';
@@ -66,27 +68,33 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     if (action === 'new') {
       onStartNewResume();
       setHasStarted(true);
+    } else if (action === 'fresher') {
+      onStartNewResume();
+      setHasStarted(true);
+      setTimeout(() => {
+        onAnswer("I am a fresher and want to build my entry-level resume");
+      }, 50);
+    } else if (action === 'experienced') {
+      onStartNewResume();
+      setHasStarted(true);
+      setTimeout(() => {
+        onAnswer("I am an experienced professional looking to highlight my career");
+      }, 50);
     } else if (action === 'templates') {
       onOpenTemplates();
-    } else if (action === 'continue') {
-      onContinuePrevious();
-      setHasStarted(true);
-    } else if (action === 'tips') {
-      setHasStarted(true);
-      onAnswer("Tell me the top ATS resume tips to get interviews");
     }
   };
 
   return (
-    <div className="flex flex-col h-full w-full min-w-0 bg-[#E9EAF2] overflow-hidden relative">
+    <div className="flex flex-col h-full w-full min-w-0 bg-[#FAFAF8] overflow-hidden relative">
       {/* Top Header */}
-      <header className="h-14 sm:h-16 px-3 sm:px-6 border-b border-[#C8CAD4]/30 flex items-center justify-between shrink-0 select-none z-10">
+      <header className="h-14 sm:h-16 px-4 sm:px-6 bg-white border-b border-[#E9EDE9] flex items-center justify-between shrink-0 select-none z-10">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-          {/* Mobile hamburger menu toggle (320px - 767px) */}
+          {/* Mobile hamburger menu toggle */}
           <button
             onClick={onOpenMobileMenu}
             title="Open menu"
-            className="flex md:hidden p-2 rounded-xl neu-button-secondary text-[#34364A] hover:text-[#7776B8] cursor-pointer shrink-0 min-h-[40px] min-w-[40px] items-center justify-center"
+            className="flex md:hidden p-2 rounded-xl border border-[#E9EDE9] text-[#4B5750] hover:text-[#087A50] hover:bg-[#FAFAF8] cursor-pointer shrink-0 min-h-[38px] min-w-[38px] items-center justify-center transition"
             aria-label="Open navigation menu"
           >
             <Menu className="w-4 h-4" />
@@ -97,28 +105,28 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             <button
               onClick={onToggleSidebar}
               title="Expand sidebar"
-              className="hidden md:flex p-2 rounded-xl neu-button-secondary text-[#7E8494] hover:text-[#34364A] cursor-pointer shrink-0"
+              className="hidden md:flex p-2 rounded-xl border border-[#E9EDE9] text-[#78847D] hover:text-[#202923] hover:bg-[#FAFAF8] cursor-pointer shrink-0 transition"
             >
               <PanelLeft className="w-4 h-4" />
             </button>
           )}
 
           <div className="flex items-center gap-2 min-w-0">
-            <span className="text-xs sm:text-sm font-bold text-[#34364A] tracking-tight truncate">
+            <span className="text-xs sm:text-sm font-bold text-[#202923] tracking-tight truncate">
               ResumeCraft Assistant
             </span>
           </div>
         </div>
 
         {/* Right Header Actions */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           {hasStarted && (
             <button
               onClick={onOpenPreview}
               title="View full resume document"
-              className="text-[11px] sm:text-xs font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl neu-button-secondary text-[#34364A] hover:text-[#7776B8] flex items-center gap-1 sm:gap-1.5 cursor-pointer min-h-[36px]"
+              className="text-[11px] sm:text-xs font-semibold px-3 py-1.5 rounded-xl bg-[#DDF2E8] hover:bg-[#c9ead9] text-[#087A50] border border-[#087A50]/20 flex items-center gap-1.5 cursor-pointer min-h-[36px] transition shadow-xs"
             >
-              <Eye className="w-3.5 h-3.5 text-[#7776B8]" />
+              <Eye className="w-3.5 h-3.5 text-[#087A50]" />
               <span>Resume</span>
             </button>
           )}
@@ -126,9 +134,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           <button
             onClick={onOpenTemplates}
             title="Browse resume templates"
-            className="text-[11px] sm:text-xs font-semibold px-2.5 sm:px-3.5 py-1.5 rounded-xl neu-button-secondary text-[#34364A] hover:text-[#7776B8] flex items-center gap-1 sm:gap-1.5 cursor-pointer min-h-[36px]"
+            className="text-[11px] sm:text-xs font-semibold px-3 py-1.5 rounded-xl border border-[#E9EDE9] bg-white text-[#4B5750] hover:text-[#087A50] hover:bg-[#FAFAF8] flex items-center gap-1.5 cursor-pointer min-h-[36px] transition"
           >
-            <Layout className="w-3.5 h-3.5 text-[#7776B8]" />
+            <Layout className="w-3.5 h-3.5 text-[#087A50]" />
             <span className="hidden xs:inline">Templates</span>
           </button>
         </div>
@@ -137,121 +145,117 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       {/* Main Center Area */}
       <div className="flex-1 overflow-y-auto flex flex-col min-h-0 w-full min-w-0">
         {!hasStarted ? (
-          /* Welcome Screen (ChatGPT-style center view) */
-          <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 text-center max-w-5xl mx-auto my-auto animate-fadeIn select-none w-full min-w-0">
+          /* Welcome Screen (Emerald and white SaaS center view) */
+          <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 text-center max-w-4xl mx-auto my-auto animate-fadeIn select-none w-full min-w-0">
             {/* Logo Icon */}
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl neu-raised flex items-center justify-center text-[#7776B8] font-black text-xl sm:text-2xl mb-4 sm:mb-6 shrink-0 shadow-sm">
-              RC
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#DDF2E8] border border-[#087A50]/20 flex items-center justify-center text-[#087A50] mb-5 shrink-0 shadow-xs">
+              <FileSpreadsheet className="w-8 h-8 text-[#087A50]" />
             </div>
 
-            {/* Responsive Heading with clamp() */}
-            <h1 className="text-clamp-heading font-extrabold text-[#34364A] tracking-tight mb-2 sm:mb-3 max-w-2xl px-2">
+            {/* Responsive Heading */}
+            <h1 className="text-clamp-heading font-extrabold text-[#202923] tracking-tight mb-2.5 max-w-2xl px-2">
               How can I help you build your resume today?
             </h1>
 
             {/* Subtitle */}
-            <p className="text-clamp-subheading text-[#7E8494] max-w-lg mb-6 sm:mb-10 px-3 font-normal">
-              A guided, step-by-step conversation to create your professional resume.
+            <p className="text-clamp-subheading text-[#78847D] max-w-lg mb-8 sm:mb-10 px-3 font-normal">
+              Create your professional resume through a simple guided conversation.
             </p>
 
-            {/* Quick Action Cards:
-                - Desktop (1200px+): 1 horizontal row (xl:grid-cols-4)
-                - Laptop & Tablet (768px-1199px): 2x2 grid (sm:grid-cols-2 lg:grid-cols-4)
-                - Mobile (320px-767px): 1 column on narrow (grid-cols-1), 2 columns on sm (sm:grid-cols-2)
-            */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 w-full max-w-4xl px-2">
+            {/* 4 Quick Suggestion Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 sm:gap-4 w-full max-w-4xl px-2">
               <button
                 onClick={() => handleActionClick('new')}
-                className="p-3.5 sm:p-4 rounded-2xl neu-raised hover:neu-raised-hover active:neu-pressed text-left transition-all cursor-pointer group flex flex-col justify-between min-h-[92px]"
+                className="p-4 rounded-2xl bg-white border border-[#E9EDE9] hover:border-[#087A50]/40 hover:shadow-md transition-all text-left cursor-pointer group flex flex-col justify-between min-h-[110px]"
               >
-                <div className="flex items-center gap-2.5 mb-1.5">
-                  <div className="w-8 h-8 rounded-xl neu-inset text-[#7776B8] flex items-center justify-center shrink-0">
-                    <FilePlus2 className="w-4 h-4" />
+                <div className="flex items-center gap-2.5 mb-2">
+                  <div className="w-8 h-8 rounded-xl bg-[#DDF2E8] text-[#087A50] flex items-center justify-center shrink-0">
+                    <FilePlus2 className="w-4 h-4 text-[#087A50]" />
                   </div>
-                  <span className="text-xs sm:text-sm font-bold text-[#34364A] group-hover:text-[#7776B8] leading-tight">
+                  <span className="text-xs sm:text-sm font-bold text-[#202923] group-hover:text-[#087A50] transition leading-tight">
                     Create a New Resume
                   </span>
                 </div>
-                <p className="text-[11px] sm:text-xs text-[#7E8494] pl-10 leading-snug">
+                <p className="text-[11px] sm:text-xs text-[#78847D] pl-10 leading-snug">
                   Start fresh with guided questions for your experience.
                 </p>
               </button>
 
               <button
+                onClick={() => handleActionClick('fresher')}
+                className="p-4 rounded-2xl bg-white border border-[#E9EDE9] hover:border-[#087A50]/40 hover:shadow-md transition-all text-left cursor-pointer group flex flex-col justify-between min-h-[110px]"
+              >
+                <div className="flex items-center gap-2.5 mb-2">
+                  <div className="w-8 h-8 rounded-xl bg-[#DDF2E8] text-[#087A50] flex items-center justify-center shrink-0">
+                    <GraduationCap className="w-4 h-4 text-[#087A50]" />
+                  </div>
+                  <span className="text-xs sm:text-sm font-bold text-[#202923] group-hover:text-[#087A50] transition leading-tight">
+                    Build a Fresher Resume
+                  </span>
+                </div>
+                <p className="text-[11px] sm:text-xs text-[#78847D] pl-10 leading-snug">
+                  Tailored for students and entry-level job seekers.
+                </p>
+              </button>
+
+              <button
+                onClick={() => handleActionClick('experienced')}
+                className="p-4 rounded-2xl bg-white border border-[#E9EDE9] hover:border-[#087A50]/40 hover:shadow-md transition-all text-left cursor-pointer group flex flex-col justify-between min-h-[110px]"
+              >
+                <div className="flex items-center gap-2.5 mb-2">
+                  <div className="w-8 h-8 rounded-xl bg-[#DDF2E8] text-[#087A50] flex items-center justify-center shrink-0">
+                    <Briefcase className="w-4 h-4 text-[#087A50]" />
+                  </div>
+                  <span className="text-xs sm:text-sm font-bold text-[#202923] group-hover:text-[#087A50] transition leading-tight">
+                    Build an Experienced Resume
+                  </span>
+                </div>
+                <p className="text-[11px] sm:text-xs text-[#78847D] pl-10 leading-snug">
+                  Highlight career milestones, skills, and impact.
+                </p>
+              </button>
+
+              <button
                 onClick={() => handleActionClick('templates')}
-                className="p-3.5 sm:p-4 rounded-2xl neu-raised hover:neu-raised-hover active:neu-pressed text-left transition-all cursor-pointer group flex flex-col justify-between min-h-[92px]"
+                className="p-4 rounded-2xl bg-white border border-[#E9EDE9] hover:border-[#087A50]/40 hover:shadow-md transition-all text-left cursor-pointer group flex flex-col justify-between min-h-[110px]"
               >
-                <div className="flex items-center gap-2.5 mb-1.5">
-                  <div className="w-8 h-8 rounded-xl neu-inset text-[#7776B8] flex items-center justify-center shrink-0">
-                    <Layout className="w-4 h-4" />
+                <div className="flex items-center gap-2.5 mb-2">
+                  <div className="w-8 h-8 rounded-xl bg-[#DDF2E8] text-[#087A50] flex items-center justify-center shrink-0">
+                    <Layout className="w-4 h-4 text-[#087A50]" />
                   </div>
-                  <span className="text-xs sm:text-sm font-bold text-[#34364A] group-hover:text-[#7776B8] leading-tight">
-                    Browse Templates
+                  <span className="text-xs sm:text-sm font-bold text-[#202923] group-hover:text-[#087A50] transition leading-tight">
+                    Explore Templates
                   </span>
                 </div>
-                <p className="text-[11px] sm:text-xs text-[#7E8494] pl-10 leading-snug">
-                  Explore 6 modern, ATS-friendly document formats.
-                </p>
-              </button>
-
-              <button
-                onClick={() => handleActionClick('continue')}
-                className="p-3.5 sm:p-4 rounded-2xl neu-raised hover:neu-raised-hover active:neu-pressed text-left transition-all cursor-pointer group flex flex-col justify-between min-h-[92px]"
-              >
-                <div className="flex items-center gap-2.5 mb-1.5">
-                  <div className="w-8 h-8 rounded-xl neu-inset text-[#7776B8] flex items-center justify-center shrink-0">
-                    <FileText className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs sm:text-sm font-bold text-[#34364A] group-hover:text-[#7776B8] leading-tight">
-                    Continue Previous
-                  </span>
-                </div>
-                <p className="text-[11px] sm:text-xs text-[#7E8494] pl-10 leading-snug">
-                  Resume from where you left off or inspect draft.
-                </p>
-              </button>
-
-              <button
-                onClick={() => handleActionClick('tips')}
-                className="p-3.5 sm:p-4 rounded-2xl neu-raised hover:neu-raised-hover active:neu-pressed text-left transition-all cursor-pointer group flex flex-col justify-between min-h-[92px]"
-              >
-                <div className="flex items-center gap-2.5 mb-1.5">
-                  <div className="w-8 h-8 rounded-xl neu-inset text-[#7776B8] flex items-center justify-center shrink-0">
-                    <Lightbulb className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs sm:text-sm font-bold text-[#34364A] group-hover:text-[#7776B8] leading-tight">
-                    Resume Tips
-                  </span>
-                </div>
-                <p className="text-[11px] sm:text-xs text-[#7E8494] pl-10 leading-snug">
-                  Action verbs and recruiter-approved formatting advice.
+                <p className="text-[11px] sm:text-xs text-[#78847D] pl-10 leading-snug">
+                  Browse ATS-optimized professional designs.
                 </p>
               </button>
             </div>
           </div>
         ) : (
-          /* Chat Mode: Conversation Messages with comfortable responsive spacing */
-          <div className="w-full max-w-3xl mx-auto p-3 sm:p-5 md:p-6 space-y-3.5 sm:space-y-4 min-w-0">
+          /* Chat Mode: Conversation Messages */
+          <div className="w-full max-w-3xl mx-auto p-4 sm:p-6 space-y-4 min-w-0">
             {messages.map((msg) => (
               <ChatMessageItem key={msg.id} message={msg} onEdit={onEditMessage} />
             ))}
 
             {/* Current Active Bot Question */}
             {!isTyping && currentQuestion && (
-              <div className="flex items-start gap-2.5 sm:gap-3 my-2.5 sm:my-3 justify-start animate-fadeIn min-w-0">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl neu-raised text-[#7776B8] flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">
-                  RC
+              <div className="flex items-start gap-2.5 sm:gap-3 my-3 justify-start animate-fadeIn min-w-0">
+                <div className="w-8 h-8 rounded-xl bg-[#DDF2E8] border border-[#087A50]/20 text-[#087A50] flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+                  <FileSpreadsheet className="w-4 h-4 text-[#087A50]" />
                 </div>
 
-                <div className="max-w-[88%] sm:max-w-[78%] flex flex-col items-start min-w-0">
+                <div className="max-w-[88%] sm:max-w-[80%] flex flex-col items-start min-w-0">
                   <div className="flex items-center gap-2 mb-1 px-1">
-                    <span className="text-[10px] font-bold text-[#7E8494] uppercase tracking-wider">
+                    <span className="text-[11px] font-semibold text-[#78847D]">
                       ResumeCraft
                     </span>
                   </div>
 
-                  <div className="px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl neu-raised text-xs sm:text-sm leading-relaxed text-[#34364A] break-words overflow-hidden w-full">
-                    <div className="font-semibold whitespace-pre-line text-[#34364A]">
+                  <div className="px-4 py-3 rounded-2xl bg-white border border-[#E9EDE9] text-xs sm:text-sm leading-relaxed text-[#202923] break-words overflow-hidden w-full shadow-xs">
+                    <div className="font-medium whitespace-pre-line text-[#202923]">
                       {currentQuestion.question}
                     </div>
                   </div>
@@ -261,18 +265,18 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
             {/* Typing Indicator */}
             {isTyping && (
-              <div className="flex items-center gap-2 text-xs text-[#7E8494] py-2 animate-fadeIn">
-                <div className="w-7 h-7 rounded-xl neu-raised text-[#7776B8] flex items-center justify-center text-xs font-bold shrink-0">
-                  RC
+              <div className="flex items-center gap-2 text-xs text-[#78847D] py-2 animate-fadeIn">
+                <div className="w-8 h-8 rounded-xl bg-[#DDF2E8] border border-[#087A50]/20 text-[#087A50] flex items-center justify-center shrink-0 shadow-xs">
+                  <FileSpreadsheet className="w-4 h-4 text-[#087A50]" />
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-2 rounded-2xl neu-inset">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#7776B8] animate-bounce" />
+                <div className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white border border-[#E9EDE9] shadow-xs">
+                  <span className="w-2 h-2 rounded-full bg-[#087A50] animate-bounce" />
                   <span
-                    className="w-1.5 h-1.5 rounded-full bg-[#7776B8] animate-bounce"
+                    className="w-2 h-2 rounded-full bg-[#087A50] animate-bounce"
                     style={{ animationDelay: '150ms' }}
                   />
                   <span
-                    className="w-1.5 h-1.5 rounded-full bg-[#7776B8] animate-bounce"
+                    className="w-2 h-2 rounded-full bg-[#087A50] animate-bounce"
                     style={{ animationDelay: '300ms' }}
                   />
                 </div>

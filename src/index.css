@@ -1,24 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --bg-main: #E9EAF2;
-  --surface: #E9EAF2;
-  --surface-secondary: #F3F3F8;
-  --doc-bg: #FFFFFF;
-  --primary: #7776B8;
-  --secondary: #A6A5D5;
-  --text-main: #34364A;
-  --text-muted: #7E8494;
+  --primary-green: #087A50;
+  --accent-green: #059669;
+  --dark-green: #065F46;
+  --light-green: #DDF2E8;
+  --user-bubble: #E5F3EB;
+  --bg-main: #FAFAF8;
+  --bg-card: #FFFFFF;
+  --text-primary: #202923;
+  --text-secondary: #4B5750;
+  --text-muted: #78847D;
+  --border-color: #E9EDE9;
   --success: #6D9B83;
   --error: #C77D86;
-  --shadow-dark: #C8CAD4;
-  --shadow-light: #FFFFFF;
   font-family: 'Inter', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 body {
-  background-color: #E9EAF2;
-  color: #34364A;
+  background-color: #FAFAF8;
+  color: #202923;
   font-family: 'Inter', 'Manrope', sans-serif;
   margin: 0;
   padding: 0;
@@ -28,17 +29,17 @@ body {
 
 /* Responsive typography using clamp() */
 .text-clamp-heading {
-  font-size: clamp(22px, 3.8vw, 38px);
-  line-height: 1.18;
+  font-size: clamp(24px, 3.8vw, 36px);
+  line-height: 1.2;
 }
 
 .text-clamp-subheading {
-  font-size: clamp(13px, 1.4vw, 16px);
-  line-height: 1.45;
+  font-size: clamp(13px, 1.3vw, 15px);
+  line-height: 1.5;
 }
 
 .text-clamp-body {
-  font-size: clamp(13px, 1.1vw, 15px);
+  font-size: clamp(13px, 1.1vw, 14px);
   line-height: 1.5;
 }
 
@@ -47,117 +48,124 @@ body {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
 
-/* Neumorphic Shadow System */
+/* SaaS Card & Surface System (Clean replacement for legacy Neomorphism) */
 .neu-raised {
-  background-color: #E9EAF2;
-  box-shadow: 6px 6px 12px #C8CAD4, -6px -6px 12px #FFFFFF;
+  background-color: #FFFFFF;
+  border: 1px solid #E9EDE9;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
 }
 
 .neu-raised-hover:hover {
-  box-shadow: 4px 4px 8px #C8CAD4, -4px -4px 8px #FFFFFF;
+  border-color: #087A50;
+  box-shadow: 0 4px 12px 0 rgba(8, 122, 80, 0.08);
   transform: translateY(-1px);
 }
 
 .neu-raised-hover:active,
 .neu-raised:active {
-  box-shadow: inset 4px 4px 8px #C8CAD4, inset -4px -4px 8px #FFFFFF;
   transform: translateY(0);
 }
 
 .neu-inset {
-  background-color: #E9EAF2;
-  box-shadow: inset 4px 4px 8px #C8CAD4, inset -4px -4px 8px #FFFFFF;
+  background-color: #FAFAF8;
+  border: 1px solid #E9EDE9;
 }
 
 .neu-subtle {
-  background-color: #E9EAF2;
-  box-shadow: 3px 3px 7px #C8CAD4, -3px -3px 7px #FFFFFF;
+  background-color: #FFFFFF;
+  border: 1px solid #E9EDE9;
 }
 
 .neu-subtle-hover:hover {
-  box-shadow: 2px 2px 5px #C8CAD4, -2px -2px 5px #FFFFFF;
+  background-color: #DDF2E8;
+  border-color: #087A50;
+  color: #087A50;
 }
 
 .neu-pressed {
-  background-color: #E9EAF2;
-  box-shadow: inset 4px 4px 8px #C8CAD4, inset -4px -4px 8px #FFFFFF;
+  background-color: #DDF2E8;
+  border: 1px solid #087A50;
+  color: #087A50;
 }
 
-/* Primary Lavender Buttons */
+/* Primary Emerald Buttons */
 .neu-button-primary {
-  background-color: #7776B8;
+  background-color: #087A50;
   color: #FFFFFF;
-  box-shadow: 5px 5px 10px #C8CAD4, -5px -5px 10px #FFFFFF;
+  box-shadow: 0 1px 2px 0 rgba(8, 122, 80, 0.2);
   transition: all 0.15s ease-in-out;
 }
 
 .neu-button-primary:hover:not(:disabled) {
-  background-color: #6c6ba8;
-  box-shadow: 3px 3px 7px #C8CAD4, -3px -3px 7px #FFFFFF;
+  background-color: #065F46;
+  box-shadow: 0 4px 10px 0 rgba(8, 122, 80, 0.25);
 }
 
 .neu-button-primary:active:not(:disabled) {
-  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.28), inset -3px -3px 6px rgba(255, 255, 255, 0.25);
+  background-color: #054835;
   transform: translateY(1px);
 }
 
-/* Secondary Neumorphic Buttons */
+/* Secondary White/Subtle Buttons */
 .neu-button-secondary {
-  background-color: #E9EAF2;
-  color: #34364A;
-  box-shadow: 4px 4px 9px #C8CAD4, -4px -4px 9px #FFFFFF;
+  background-color: #FFFFFF;
+  color: #202923;
+  border: 1px solid #E9EDE9;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
   transition: all 0.15s ease-in-out;
 }
 
 .neu-button-secondary:hover:not(:disabled) {
-  color: #7776B8;
-  box-shadow: 2px 2px 5px #C8CAD4, -2px -2px 5px #FFFFFF;
+  background-color: #FAFAF8;
+  border-color: #D0D7D2;
+  color: #087A50;
 }
 
 .neu-button-secondary:active:not(:disabled),
 .neu-button-secondary.active {
-  box-shadow: inset 3px 3px 6px #C8CAD4, inset -3px -3px 6px #FFFFFF;
-  color: #7776B8;
+  background-color: #DDF2E8;
+  border-color: #087A50;
+  color: #087A50;
 }
 
-/* Inset Input Fields */
+/* Inset / Clean Input Fields */
 .neu-input {
-  background-color: #E9EAF2;
-  color: #34364A;
-  box-shadow: inset 3px 3px 6px #C8CAD4, inset -3px -3px 6px #FFFFFF;
-  border: 1px solid transparent;
+  background-color: #FFFFFF;
+  color: #202923;
+  border: 1px solid #E9EDE9;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .neu-input:focus {
   outline: none;
-  border-color: #7776B8;
-  box-shadow: inset 3px 3px 6px #C8CAD4, inset -3px -3px 6px #FFFFFF, 0 0 0 1px #7776B8;
+  border-color: #087A50;
+  box-shadow: 0 0 0 2px rgba(8, 122, 80, 0.15);
 }
 
 .neu-input.error {
   border-color: #C77D86;
-  box-shadow: inset 3px 3px 6px #C8CAD4, inset -3px -3px 6px #FFFFFF, 0 0 0 1px #C77D86;
+  box-shadow: 0 0 0 2px rgba(199, 125, 134, 0.15);
 }
 
 .neu-input.success {
   border-color: #6D9B83;
 }
 
-/* Custom Scrollbars in soft UI */
+/* Custom Clean Scrollbars */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #E9EAF2;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #C8CAD4;
+  background: #D4DBD6;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #A6A5D5;
+  background: #A0ABA4;
 }
 
 @keyframes fadeIn {
@@ -172,7 +180,7 @@ body {
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @media print {

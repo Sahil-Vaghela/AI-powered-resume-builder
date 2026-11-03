@@ -90,15 +90,15 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
   );
 
   return (
-    <div className="flex flex-col h-full bg-[#E9EAF2] overflow-hidden select-none w-full min-w-0">
-      {/* Top Neumorphic Toolbar - Responsive wrapping */}
-      <div className="bg-[#E9EAF2] border-b border-[#C8CAD4]/40 px-3 sm:px-5 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-2 shrink-0 z-10">
+    <div className="flex flex-col h-full bg-[#FAFAF8] overflow-hidden select-none w-full min-w-0">
+      {/* Top Toolbar */}
+      <div className="bg-white border-b border-[#E9EDE9] px-3 sm:px-5 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-2 shrink-0 z-10">
         <div className="flex items-center gap-2 sm:gap-3">
-          <span className="text-[11px] sm:text-xs font-semibold text-[#7E8494]">Template:</span>
+          <span className="text-[11px] sm:text-xs font-semibold text-[#78847D]">Template:</span>
           <select
             value={resume.template}
             onChange={(e) => onSelectTemplate && onSelectTemplate(e.target.value)}
-            className="text-xs font-bold text-[#34364A] px-2.5 sm:px-3.5 py-1.5 rounded-xl neu-button-secondary cursor-pointer focus:outline-none min-h-[36px]"
+            className="text-xs font-bold text-[#202923] px-3 py-1.5 rounded-xl border border-[#E9EDE9] bg-white cursor-pointer focus:outline-none focus:border-[#087A50] min-h-[36px]"
           >
             {templatesData.map((t) => (
               <option key={t.id} value={t.id}>
@@ -111,21 +111,21 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
         {/* Action Controls & Zoom */}
         <div className="flex items-center gap-1.5 sm:gap-2.5">
           {/* Compact Zoom Selector */}
-          <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-xl neu-inset">
+          <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-xl border border-[#E9EDE9] bg-[#FAFAF8]">
             <button
               onClick={() => setZoom((z) => Math.max(0.35, z - 0.1))}
               title="Zoom out"
-              className="p-1 text-[#7E8494] hover:text-[#34364A] cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center font-bold text-xs"
+              className="p-1 text-[#78847D] hover:text-[#202923] cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center font-bold text-xs"
             >
               -
             </button>
-            <span className="text-[10px] sm:text-[11px] font-bold text-[#34364A] w-8 sm:w-9 text-center">
+            <span className="text-[10px] sm:text-[11px] font-bold text-[#202923] w-8 sm:w-9 text-center tabular-nums">
               {Math.round(zoom * 100)}%
             </span>
             <button
               onClick={() => setZoom((z) => Math.min(1.2, z + 0.1))}
               title="Zoom in"
-              className="p-1 text-[#7E8494] hover:text-[#34364A] cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center font-bold text-xs"
+              className="p-1 text-[#78847D] hover:text-[#202923] cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center font-bold text-xs"
             >
               +
             </button>
@@ -134,16 +134,16 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
           <button
             onClick={handlePrint}
             title="Print resume"
-            className="hidden sm:flex items-center gap-1.5 text-xs font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl neu-button-secondary text-[#34364A] cursor-pointer min-h-[36px]"
+            className="hidden sm:flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl border border-[#E9EDE9] bg-white text-[#4B5750] hover:text-[#087A50] hover:bg-[#FAFAF8] cursor-pointer min-h-[36px] transition"
           >
-            <Printer className="w-3.5 h-3.5 text-[#7776B8]" />
+            <Printer className="w-3.5 h-3.5 text-[#087A50]" />
             <span>Print</span>
           </button>
 
           <button
             onClick={handleDownloadPDF}
             disabled={isExporting}
-            className="flex items-center gap-1 sm:gap-1.5 text-xs font-bold px-3 sm:px-4 py-1.5 rounded-xl neu-button-primary disabled:opacity-50 cursor-pointer min-h-[36px]"
+            className="flex items-center gap-1.5 text-xs font-bold px-4 py-1.5 rounded-xl bg-[#087A50] hover:bg-[#065F46] text-white disabled:opacity-50 cursor-pointer min-h-[36px] transition shadow-xs"
           >
             <Download className="w-3.5 h-3.5" />
             <span>{isExporting ? 'Exporting...' : 'PDF'}</span>

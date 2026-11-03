@@ -4,7 +4,37 @@
       "required": true,
       "minLength": 2,
       "maxLength": 80,
-      "errorMessage": "Please enter a valid full name (at least 2 characters)."
+      "disallowedWords": [
+        "hi",
+        "hii",
+        "hiii",
+        "hello",
+        "helo",
+        "hey",
+        "skip",
+        "none",
+        "developer",
+        "worker",
+        "idk",
+        "test",
+        "good morning",
+        "how are you"
+      ],
+      "errorMessage": "Please enter a valid full name (letters only, not a greeting or command)."
+    },
+    "occupation": {
+      "required": true,
+      "minLength": 2,
+      "maxLength": 100,
+      "disallowedWords": [
+        "hi",
+        "hii",
+        "hello",
+        "hey",
+        "skip",
+        "good morning"
+      ],
+      "errorMessage": "Please describe your job, profession or occupation."
     },
     "email": {
       "required": true,

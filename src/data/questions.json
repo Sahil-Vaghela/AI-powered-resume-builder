@@ -15,15 +15,30 @@
     {
       "id": "professional_title",
       "section": "personal",
-      "question": "Nice to meet you, {personal.fullName}! What is your current or target professional title?",
+      "question": "What is your current job, profession or occupation? You can describe it in your own words.",
       "type": "text_with_suggestions",
-      "suggestionsKey": "titles",
-      "placeholder": "e.g., Full Stack Software Engineer",
+      "suggestions": [
+        "Student",
+        "Fresher",
+        "Software Developer",
+        "Teacher",
+        "Accountant",
+        "Sales Executive",
+        "Office Assistant",
+        "Warehouse Worker",
+        "Stock Department Worker",
+        "Business Owner",
+        "Other"
+      ],
+      "placeholder": "e.g., Stock Department Worker, Teacher, or Software Engineer",
       "required": true,
       "skipAllowed": false,
       "field": "personal.professionalTitle",
-      "validation": { "minLength": 2 },
-      "tip": "A crisp title matches what hiring managers are searching for."
+      "allowCustomAnswer": true,
+      "acceptedIntents": [
+        "provide_occupation"
+      ],
+      "tip": "Enter any profession or job title in your own words, or choose from suggestions."
     },
     {
       "id": "email",

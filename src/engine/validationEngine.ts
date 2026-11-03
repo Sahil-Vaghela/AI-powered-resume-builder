@@ -46,6 +46,12 @@ export function validateInput(
     if (rule.maxLength && strValue.length > rule.maxLength) {
       return { isValid: false, errorMessage: rule.errorMessage || `Must be at most ${rule.maxLength} characters.` };
     }
+    if (rule.disallowedWords && Array.isArray(rule.disallowedWords)) {
+      const lower = strValue.toLowerCase();
+      if (rule.disallowedWords.some((w: string) => lower === w.toLowerCase() || lower.startsWith(w.toLowerCase() + ' '))) {
+        return { isValid: false, errorMessage: rule.errorMessage || 'Please enter a valid answer, not a greeting.' };
+      }
+    }
     if (rule.pattern) {
       const regex = new RegExp(rule.pattern, 'i');
       if (!regex.test(strValue)) {

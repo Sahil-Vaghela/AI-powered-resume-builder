@@ -192,25 +192,25 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onSave, onCl
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#34364A]/40 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 md:p-6 animate-fadeIn">
-      <div className="bg-[#E9EAF2] w-full max-w-4xl h-[95vh] sm:h-[90vh] rounded-2xl sm:rounded-3xl neu-raised flex flex-col overflow-hidden border border-[#C8CAD4]/50">
+    <div className="fixed inset-0 z-50 bg-[#202923]/40 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 md:p-6 animate-fadeIn">
+      <div className="bg-white w-full max-w-4xl h-[95vh] sm:h-[90vh] rounded-2xl sm:rounded-3xl flex flex-col overflow-hidden border border-[#E9EDE9] shadow-2xl">
         {/* Header */}
-        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-[#C8CAD4]/40 flex items-center justify-between shrink-0">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-[#E9EDE9] flex items-center justify-between shrink-0 bg-white">
           <div>
-            <h2 className="text-sm sm:text-base font-extrabold text-[#34364A]">Direct Resume Editor</h2>
-            <p className="text-[11px] sm:text-xs text-[#7E8494]">Edit, add, or remove records across any section</p>
+            <h2 className="text-sm sm:text-base font-extrabold text-[#202923]">Direct Resume Editor</h2>
+            <p className="text-[11px] sm:text-xs text-[#78847D]">Edit, add, or remove records across any section</p>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={handleSaveAndClose}
-              className="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 neu-button-primary rounded-xl text-xs font-bold cursor-pointer"
+              className="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 bg-[#087A50] hover:bg-[#065F46] text-white rounded-xl text-xs font-bold cursor-pointer transition shadow-xs"
             >
               <Save className="w-3.5 h-3.5" />
               <span>Apply</span>
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 sm:p-2 neu-button-secondary text-[#7E8494] hover:text-[#34364A] rounded-xl cursor-pointer"
+              className="p-1.5 sm:p-2 border border-[#E9EDE9] text-[#78847D] hover:text-[#202923] hover:bg-[#FAFAF8] rounded-xl cursor-pointer transition"
             >
               <X className="w-4 h-4" />
             </button>
@@ -218,9 +218,9 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onSave, onCl
         </div>
 
         {/* Body with Responsive Tabs */}
-        <div className="flex-1 flex flex-col sm:flex-row overflow-hidden min-h-0">
-          {/* Navigation Tabs (Horizontal scroll on mobile, Vertical on desktop) */}
-          <div className="w-full sm:w-48 border-b sm:border-b-0 sm:border-r border-[#C8CAD4]/40 p-2 sm:p-3 flex sm:flex-col gap-1.5 overflow-x-auto sm:overflow-y-auto shrink-0 select-none">
+        <div className="flex-1 flex flex-col sm:flex-row overflow-hidden min-h-0 bg-[#FAFAF8]">
+          {/* Navigation Tabs */}
+          <div className="w-full sm:w-48 border-b sm:border-b-0 sm:border-r border-[#E9EDE9] bg-white p-2 sm:p-3 flex sm:flex-col gap-1.5 overflow-x-auto sm:overflow-y-auto shrink-0 select-none">
             {[
               { id: 'personal', label: 'Personal', icon: User },
               { id: 'career', label: 'Summary', icon: User },
@@ -239,11 +239,11 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onSave, onCl
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-left transition cursor-pointer whitespace-nowrap shrink-0 sm:shrink min-h-[36px] ${
                     activeTab === tab.id
-                      ? 'neu-pressed text-[#7776B8]'
-                      : 'neu-subtle text-[#34364A] hover:text-[#7776B8]'
+                      ? 'bg-[#DDF2E8] text-[#087A50] font-bold border border-[#087A50]/20'
+                      : 'text-[#4B5750] hover:bg-[#FAFAF8] hover:text-[#202923]'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5 shrink-0" />
+                  <Icon className={`w-3.5 h-3.5 shrink-0 ${activeTab === tab.id ? 'text-[#087A50]' : 'text-[#78847D]'}`} />
                   <span>{tab.label}</span>
                 </button>
               );

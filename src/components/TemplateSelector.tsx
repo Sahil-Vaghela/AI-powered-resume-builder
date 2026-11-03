@@ -14,26 +14,26 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   onClose,
 }) => {
   return (
-    <div className="fixed inset-0 z-50 bg-[#34364A]/40 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 animate-fadeIn">
-      <div className="bg-[#E9EAF2] w-full max-w-3xl rounded-2xl sm:rounded-3xl neu-raised flex flex-col max-h-[90vh] sm:max-h-[85vh] overflow-hidden border border-[#C8CAD4]/40">
+    <div className="fixed inset-0 z-50 bg-[#202923]/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-fadeIn">
+      <div className="bg-white w-full max-w-3xl rounded-2xl sm:rounded-3xl flex flex-col max-h-[90vh] sm:max-h-[85vh] overflow-hidden border border-[#E9EDE9] shadow-2xl">
         {/* Header */}
-        <div className="p-4 sm:p-6 border-b border-[#C8CAD4]/40 flex items-center justify-between shrink-0">
+        <div className="p-4 sm:p-6 border-b border-[#E9EDE9] flex items-center justify-between shrink-0 bg-white">
           <div>
-            <h2 className="text-sm sm:text-base font-extrabold text-[#34364A]">Choose Resume Template</h2>
-            <p className="text-[11px] sm:text-xs text-[#7E8494]">
+            <h2 className="text-sm sm:text-base font-extrabold text-[#202923]">Choose Resume Template</h2>
+            <p className="text-[11px] sm:text-xs text-[#78847D]">
               All 6 formats are ATS-optimized and adapt cleanly to your data
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 sm:p-2 neu-button-secondary rounded-xl text-[#7E8494] hover:text-[#34364A] cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
+            className="p-1.5 sm:p-2 rounded-xl border border-[#E9EDE9] text-[#78847D] hover:text-[#202923] hover:bg-[#FAFAF8] cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center transition"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Templates Grid */}
-        <div className="flex-1 overflow-y-auto p-3 sm:p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-4 bg-[#FAFAF8]">
           {templatesData.map((tpl) => {
             const isSelected = currentTemplateId === tpl.id;
 
@@ -44,45 +44,45 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                   onSelect(tpl.id);
                   onClose();
                 }}
-                className={`p-4.5 rounded-2xl transition-all cursor-pointer flex flex-col justify-between group ${
+                className={`p-4 rounded-2xl transition-all cursor-pointer flex flex-col justify-between group ${
                   isSelected
-                    ? 'neu-pressed text-[#7776B8]'
-                    : 'neu-raised hover:neu-raised-hover text-[#34364A]'
+                    ? 'bg-[#DDF2E8] border-2 border-[#087A50] text-[#087A50] shadow-xs'
+                    : 'bg-white border border-[#E9EDE9] hover:border-[#087A50]/50 hover:shadow-md text-[#202923]'
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-sm text-[#34364A]">{tpl.name}</span>
+                    <span className="font-bold text-sm text-[#202923]">{tpl.name}</span>
                     <span
-                      className="w-3.5 h-3.5 rounded-full neu-raised"
+                      className="w-3.5 h-3.5 rounded-full border border-black/10"
                       style={{ backgroundColor: tpl.accentColor }}
                     />
                   </div>
-                  <div className="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full neu-inset text-[#7776B8] mb-2 uppercase tracking-wider">
+                  <div className="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-white border border-[#E9EDE9] text-[#087A50] mb-2 uppercase tracking-wider">
                     {tpl.badge}
                   </div>
-                  <p className="text-xs text-[#7E8494] leading-relaxed">{tpl.tagline}</p>
+                  <p className="text-xs text-[#78847D] leading-relaxed">{tpl.tagline}</p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-[#C8CAD4]/30">
-                  <div className="text-[10px] font-bold text-[#7E8494] mb-1 uppercase tracking-wider">
+                <div className="mt-4 pt-3 border-t border-[#E9EDE9]">
+                  <div className="text-[10px] font-bold text-[#78847D] mb-1 uppercase tracking-wider">
                     BEST FOR:
                   </div>
-                  <div className="text-xs text-[#34364A] font-medium leading-snug">
+                  <div className="text-xs text-[#202923] font-medium leading-snug">
                     {tpl.recommendedFor}
                   </div>
 
                   <div className="mt-3.5 flex items-center justify-between">
-                    <span className="text-[10px] text-[#7E8494]">
+                    <span className="text-[10px] text-[#78847D]">
                       {tpl.features.length} ATS checks
                     </span>
                     {isSelected ? (
-                      <span className="flex items-center gap-1 text-xs font-bold text-[#6D9B83]">
+                      <span className="flex items-center gap-1 text-xs font-bold text-[#087A50]">
                         <Check className="w-3.5 h-3.5" />
                         <span>Active</span>
                       </span>
                     ) : (
-                      <span className="text-xs font-bold text-[#7776B8] group-hover:underline">
+                      <span className="text-xs font-bold text-[#087A50] group-hover:underline">
                         Select →
                       </span>
                     )}

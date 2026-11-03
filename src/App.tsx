@@ -8,7 +8,7 @@ import { Builder } from './pages/Builder';
 
 export default function App() {
   return (
-    <div className="w-full h-screen bg-[#E9EAF2] text-[#34364A] overflow-hidden">
+    <div className="w-full h-screen bg-[#FAFAF8] text-[#202923] overflow-hidden">
       <Builder />
     </div>
   );
