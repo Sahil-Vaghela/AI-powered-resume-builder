@@ -192,37 +192,37 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onSave, onCl
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#34364A]/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-fadeIn">
-      <div className="bg-[#E9EAF2] w-full max-w-4xl h-[90vh] rounded-3xl neu-raised flex flex-col overflow-hidden border border-[#C8CAD4]/50">
+    <div className="fixed inset-0 z-50 bg-[#34364A]/40 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 md:p-6 animate-fadeIn">
+      <div className="bg-[#E9EAF2] w-full max-w-4xl h-[95vh] sm:h-[90vh] rounded-2xl sm:rounded-3xl neu-raised flex flex-col overflow-hidden border border-[#C8CAD4]/50">
         {/* Header */}
-        <div className="px-6 py-4.5 border-b border-[#C8CAD4]/40 flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-[#C8CAD4]/40 flex items-center justify-between shrink-0">
           <div>
-            <h2 className="text-base font-extrabold text-[#34364A]">Direct Resume Editor</h2>
-            <p className="text-xs text-[#7E8494]">Edit, add, or remove records across any section</p>
+            <h2 className="text-sm sm:text-base font-extrabold text-[#34364A]">Direct Resume Editor</h2>
+            <p className="text-[11px] sm:text-xs text-[#7E8494]">Edit, add, or remove records across any section</p>
           </div>
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <button
               onClick={handleSaveAndClose}
-              className="flex items-center gap-2 px-4 py-2 neu-button-primary rounded-xl text-xs font-bold cursor-pointer"
+              className="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 neu-button-primary rounded-xl text-xs font-bold cursor-pointer"
             >
               <Save className="w-3.5 h-3.5" />
-              <span>Apply Changes</span>
+              <span>Apply</span>
             </button>
             <button
               onClick={onClose}
-              className="p-2 neu-button-secondary text-[#7E8494] hover:text-[#34364A] rounded-xl cursor-pointer"
+              className="p-1.5 sm:p-2 neu-button-secondary text-[#7E8494] hover:text-[#34364A] rounded-xl cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Body with Sidebar */}
-        <div className="flex-1 flex overflow-hidden">
-          {/* Navigation Tabs */}
-          <div className="w-48 border-r border-[#C8CAD4]/40 p-3 space-y-1.5 shrink-0 overflow-y-auto">
+        {/* Body with Responsive Tabs */}
+        <div className="flex-1 flex flex-col sm:flex-row overflow-hidden min-h-0">
+          {/* Navigation Tabs (Horizontal scroll on mobile, Vertical on desktop) */}
+          <div className="w-full sm:w-48 border-b sm:border-b-0 sm:border-r border-[#C8CAD4]/40 p-2 sm:p-3 flex sm:flex-col gap-1.5 overflow-x-auto sm:overflow-y-auto shrink-0 select-none">
             {[
-              { id: 'personal', label: 'Personal Info', icon: User },
+              { id: 'personal', label: 'Personal', icon: User },
               { id: 'career', label: 'Summary', icon: User },
               { id: 'education', label: 'Education', icon: GraduationCap },
               { id: 'experience', label: 'Experience', icon: Briefcase },
@@ -230,20 +230,20 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onSave, onCl
               { id: 'projects', label: 'Projects', icon: FolderGit2 },
               { id: 'certifications', label: 'Certifications', icon: Award },
               { id: 'achievements', label: 'Achievements', icon: Trophy },
-              { id: 'additional', label: 'Languages/Interests', icon: Languages },
+              { id: 'additional', label: 'Additional', icon: Languages },
             ].map((tab) => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition cursor-pointer ${
+                  className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-left transition cursor-pointer whitespace-nowrap shrink-0 sm:shrink min-h-[36px] ${
                     activeTab === tab.id
                       ? 'neu-pressed text-[#7776B8]'
                       : 'neu-subtle text-[#34364A] hover:text-[#7776B8]'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5" />
+                  <Icon className="w-3.5 h-3.5 shrink-0" />
                   <span>{tab.label}</span>
                 </button>
               );
@@ -251,7 +251,7 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ resume, onSave, onCl
           </div>
 
           {/* Form Content */}
-          <div className="flex-1 p-6 overflow-y-auto">
+          <div className="flex-1 p-3 sm:p-6 overflow-y-auto min-w-0">
             {/* PERSONAL INFO */}
             {activeTab === 'personal' && (
               <div className="space-y-4">

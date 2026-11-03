@@ -12,18 +12,18 @@ export const ChatMessageItem: React.FC<ChatMessageProps> = ({ message, onEdit })
 
   return (
     <div
-      className={`group flex items-start gap-3 my-3 ${
+      className={`group flex items-start gap-2.5 sm:gap-3 my-2.5 sm:my-3 min-w-0 ${
         isBot ? 'justify-start' : 'justify-end'
       }`}
     >
       {isBot && (
-        <div className="w-8 h-8 rounded-xl neu-raised text-[#7776B8] flex items-center justify-center shrink-0 mt-0.5">
-          <Bot className="w-4 h-4" />
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl neu-raised text-[#7776B8] flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">
+          <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </div>
       )}
 
       <div
-        className={`max-w-[85%] sm:max-w-[78%] flex flex-col ${
+        className={`max-w-[88%] sm:max-w-[78%] flex flex-col min-w-0 ${
           isBot ? 'items-start' : 'items-end'
         }`}
       >
@@ -37,7 +37,7 @@ export const ChatMessageItem: React.FC<ChatMessageProps> = ({ message, onEdit })
             <button
               onClick={() => onEdit(message)}
               title="Edit this answer"
-              className="opacity-0 group-hover:opacity-100 transition-opacity text-[#7E8494] hover:text-[#7776B8] p-0.5 rounded cursor-pointer"
+              className="opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity text-[#7E8494] hover:text-[#7776B8] p-1 rounded cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center"
             >
               <Pencil className="w-3 h-3" />
             </button>
@@ -45,7 +45,7 @@ export const ChatMessageItem: React.FC<ChatMessageProps> = ({ message, onEdit })
         </div>
 
         <div
-          className={`px-4 py-3 rounded-2xl text-xs sm:text-sm leading-relaxed transition-all ${
+          className={`px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl text-xs sm:text-sm leading-relaxed transition-all break-words overflow-hidden ${
             isBot
               ? 'neu-raised text-[#34364A]'
               : 'neu-button-primary text-white font-medium'
@@ -56,8 +56,8 @@ export const ChatMessageItem: React.FC<ChatMessageProps> = ({ message, onEdit })
       </div>
 
       {!isBot && (
-        <div className="w-8 h-8 rounded-xl neu-inset text-[#7776B8] flex items-center justify-center shrink-0 mt-0.5">
-          <User className="w-4 h-4" />
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl neu-inset text-[#7776B8] flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">
+          <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </div>
       )}
     </div>

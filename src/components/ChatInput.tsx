@@ -354,24 +354,24 @@ export const ChatInput: React.FC<ChatInputProps> = ({
 
       {/* One Large ChatGPT-Style Chat Input Box */}
       {question?.type !== 'skill_selector' && (
-        <div className="relative flex items-center rounded-2xl neu-inset bg-[#E9EAF2] p-1.5 pl-4 transition-all">
+        <div className="relative flex items-center rounded-2xl neu-inset bg-[#E9EAF2] p-1.5 pl-3 sm:pl-4 transition-all min-w-0">
           <input
             type="text"
             value={textValue}
             onChange={(e) => setTextValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={question?.placeholder || "Message ResumeCraft..."}
-            className="flex-1 bg-transparent text-sm text-[#34364A] placeholder:text-[#7E8494] focus:outline-none pr-2 py-2"
+            className="flex-1 min-w-0 bg-transparent text-xs sm:text-sm text-[#34364A] placeholder:text-[#7E8494] focus:outline-none pr-1.5 sm:pr-2 py-2 sm:py-2.5"
             autoFocus
           />
 
-          <div className="flex items-center gap-1.5 pr-1 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-1.5 pr-0.5 sm:pr-1 shrink-0">
             {question?.skipAllowed && onSkip && (
               <button
                 type="button"
                 onClick={onSkip}
                 title="Skip optional question"
-                className="text-xs text-[#7E8494] hover:text-[#34364A] px-2 py-1.5 rounded-xl hover:neu-subtle transition cursor-pointer"
+                className="text-[11px] sm:text-xs text-[#7E8494] hover:text-[#34364A] px-2 py-1.5 rounded-xl hover:neu-subtle transition cursor-pointer min-h-[36px] flex items-center"
               >
                 Skip
               </button>
@@ -381,9 +381,10 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               type="button"
               onClick={() => handleSend()}
               disabled={isSubmitting || (question?.required && !textValue.trim())}
-              className="w-9 h-9 rounded-xl neu-button-primary disabled:opacity-40 flex items-center justify-center cursor-pointer transition shrink-0"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl neu-button-primary disabled:opacity-40 flex items-center justify-center cursor-pointer transition shrink-0 min-h-[36px] min-w-[36px]"
+              aria-label="Send message"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           </div>
         </div>

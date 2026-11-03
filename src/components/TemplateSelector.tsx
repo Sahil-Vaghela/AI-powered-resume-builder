@@ -14,26 +14,26 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   onClose,
 }) => {
   return (
-    <div className="fixed inset-0 z-50 bg-[#34364A]/40 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-[#E9EAF2] w-full max-w-3xl rounded-3xl neu-raised flex flex-col max-h-[85vh] overflow-hidden border border-[#C8CAD4]/40">
+    <div className="fixed inset-0 z-50 bg-[#34364A]/40 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 animate-fadeIn">
+      <div className="bg-[#E9EAF2] w-full max-w-3xl rounded-2xl sm:rounded-3xl neu-raised flex flex-col max-h-[90vh] sm:max-h-[85vh] overflow-hidden border border-[#C8CAD4]/40">
         {/* Header */}
-        <div className="p-6 border-b border-[#C8CAD4]/40 flex items-center justify-between">
+        <div className="p-4 sm:p-6 border-b border-[#C8CAD4]/40 flex items-center justify-between shrink-0">
           <div>
-            <h2 className="text-base font-extrabold text-[#34364A]">Choose Resume Template</h2>
-            <p className="text-xs text-[#7E8494]">
+            <h2 className="text-sm sm:text-base font-extrabold text-[#34364A]">Choose Resume Template</h2>
+            <p className="text-[11px] sm:text-xs text-[#7E8494]">
               All 6 formats are ATS-optimized and adapt cleanly to your data
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 neu-button-secondary rounded-xl text-[#7E8494] hover:text-[#34364A] cursor-pointer"
+            className="p-1.5 sm:p-2 neu-button-secondary rounded-xl text-[#7E8494] hover:text-[#34364A] cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Templates Grid */}
-        <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
           {templatesData.map((tpl) => {
             const isSelected = currentTemplateId === tpl.id;
 

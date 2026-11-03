@@ -23,6 +23,28 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Responsive typography using clamp() */
+.text-clamp-heading {
+  font-size: clamp(22px, 3.8vw, 38px);
+  line-height: 1.18;
+}
+
+.text-clamp-subheading {
+  font-size: clamp(13px, 1.4vw, 16px);
+  line-height: 1.45;
+}
+
+.text-clamp-body {
+  font-size: clamp(13px, 1.1vw, 15px);
+  line-height: 1.5;
+}
+
+/* Mobile safe area utility */
+.safe-pb {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
 
 /* Neumorphic Shadow System */
@@ -124,8 +146,8 @@ body {
 
 /* Custom Scrollbars in soft UI */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: #E9EAF2;

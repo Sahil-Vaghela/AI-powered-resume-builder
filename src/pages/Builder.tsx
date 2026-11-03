@@ -86,6 +86,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialResumeData }) => {
 
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [showTemplatesModal, setShowTemplatesModal] = useState<boolean>(false);
   const [showResumeModal, setShowResumeModal] = useState<boolean>(false);
   const [showEditorModal, setShowEditorModal] = useState<boolean>(false);
@@ -262,10 +263,12 @@ export const Builder: React.FC<BuilderProps> = ({ initialResumeData }) => {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#E9EAF2] font-sans">
-      {/* 1. LEFT SIDEBAR */}
+      {/* 1. LEFT SIDEBAR (Desktop/Tablet in-flow, Mobile slide-in drawer) */}
       <ProgressSidebar
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        isMobileOpen={isMobileMenuOpen}
+        onCloseMobile={() => setIsMobileMenuOpen(false)}
         onNewResume={handleStartNewResume}
         onSelectChat={() => {
           setShowResumeModal(false);
@@ -277,7 +280,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialResumeData }) => {
       />
 
       {/* 2. MAIN CHATGPT-STYLE WORKSPACE */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+      <main className="flex-1 flex flex-col h-full w-full min-w-0 overflow-hidden relative">
         <ChatInterface
           messages={messages}
           currentQuestion={currentQuestion}
@@ -295,6 +298,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialResumeData }) => {
           setHasStarted={setHasStarted}
           isSidebarCollapsed={isSidebarCollapsed}
           onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+          onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
         />
       </main>
 
@@ -312,21 +316,21 @@ export const Builder: React.FC<BuilderProps> = ({ initialResumeData }) => {
 
       {/* My Resumes / View Resume Modal */}
       {showResumeModal && (
-        <div className="fixed inset-0 z-50 bg-[#34364A]/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-fadeIn">
-          <div className="bg-[#E9EAF2] w-full max-w-5xl h-[92vh] rounded-3xl neu-raised flex flex-col overflow-hidden border border-[#C8CAD4]/40 shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-[#34364A]/50 backdrop-blur-xs flex items-center justify-center p-0 sm:p-4 md:p-6 animate-fadeIn">
+          <div className="bg-[#E9EAF2] w-full max-w-5xl h-full sm:h-[92vh] sm:rounded-3xl neu-raised flex flex-col overflow-hidden border-0 sm:border border-[#C8CAD4]/40 shadow-2xl">
             {/* Modal Top Bar */}
-            <div className="px-6 py-3.5 border-b border-[#C8CAD4]/40 flex items-center justify-between shrink-0">
-              <div className="flex items-center gap-3">
-                <span className="font-bold text-sm text-[#34364A]">Resume Document</span>
-                <span className="text-xs px-2.5 py-0.5 rounded-full neu-inset text-[#7776B8] font-bold uppercase tracking-wider">
+            <div className="px-4 sm:px-6 py-3 sm:py-3.5 border-b border-[#C8CAD4]/40 flex items-center justify-between shrink-0 select-none">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <span className="font-bold text-xs sm:text-sm text-[#34364A]">Resume Document</span>
+                <span className="text-[10px] sm:text-xs px-2 sm:px-2.5 py-0.5 rounded-full neu-inset text-[#7776B8] font-bold uppercase tracking-wider">
                   {resume.template}
                 </span>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <button
                   onClick={() => setShowEditorModal(true)}
-                  className="text-xs font-semibold px-3 py-1.5 rounded-xl neu-button-secondary text-[#34364A]"
+                  className="text-xs font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl neu-button-secondary text-[#34364A] cursor-pointer"
                 >
                   Edit Data
                 </button>
@@ -334,7 +338,7 @@ export const Builder: React.FC<BuilderProps> = ({ initialResumeData }) => {
                 <button
                   onClick={() => setShowResumeModal(false)}
                   title="Close resume view"
-                  className="p-1.5 rounded-xl neu-button-secondary text-[#7E8494] hover:text-[#34364A] cursor-pointer"
+                  className="p-1.5 rounded-xl neu-button-secondary text-[#7E8494] hover:text-[#34364A] cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
                 >
                   <X className="w-4 h-4" />
                 </button>
