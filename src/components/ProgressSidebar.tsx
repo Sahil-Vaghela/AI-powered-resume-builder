@@ -12,11 +12,11 @@ import {
   Trash2,
   Check,
   FileSpreadsheet,
-  Settings,
-  User,
-  Sparkles,
+  ChevronDown,
+  UserPen,
+  AlertTriangle,
 } from 'lucide-react';
-import { ChatSession } from '../engine/storageEngine';
+import { ChatSession, validateUsername } from '../engine/storageEngine';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -35,6 +35,10 @@ interface SidebarProps {
   onSelectChatSession: (chatId: string) => void;
   onRenameChat: (chatId: string, newTitle: string) => void;
   onDeleteChat: (chatId: string) => void;
+  // Username Props
+  username: string;
+  onChangeUsername: (newName: string) => void;
+  onClearLocalData: () => void;
 }
 
 export const ProgressSidebar: React.FC<SidebarProps> = ({
@@ -53,6 +57,9 @@ export const ProgressSidebar: React.FC<SidebarProps> = ({
   onSelectChatSession,
   onRenameChat,
   onDeleteChat,
+  username,
+  onChangeUsername,
+  onClearLocalData,
 }) => {
   // Menu state: which chat ID has its 3-dot dropdown open
   const [openMenuChatId, setOpenMenuChatId] = useState<string | null>(null);
@@ -61,25 +68,36 @@ export const ProgressSidebar: React.FC<SidebarProps> = ({
   const [editingChatId, setEditingChatId] = useState<string | null>(null);
   const [editTitleInput, setEditTitleInput] = useState<string>('');
 
-  // Delete confirmation state
+  // Delete chat confirmation state
   const [confirmDeleteChatId, setConfirmDeleteChatId] = useState<string | null>(null);
 
-  const menuRef = useRef<HTMLDivElement>(null);
+  // User Profile Dropdown & Modal States
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isChangeUsernameModalOpen, setIsChangeUsernameModalOpen] = useState(false);
+  const [newUsernameInput, setNewUsernameInput] = useState('');
+  const [usernameError, setUsernameError] = useState<string | null>(null);
+  const [isClearDataModalOpen, setIsClearDataModalOpen] = useState(false);
 
-  // Close 3-dot menu when clicking outside
+  const menuRef = useRef<HTMLDivElement>(null);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close menus when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setOpenMenuChatId(null);
       }
+      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target as Node)) {
+        setIsProfileMenuOpen(false);
+      }
     };
-    if (openMenuChatId) {
+    if (openMenuChatId || isProfileMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [openMenuChatId]);
+  }, [openMenuChatId, isProfileMenuOpen]);
 
   const handleStartRename = (chat: ChatSession, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -116,10 +134,40 @@ export const ProgressSidebar: React.FC<SidebarProps> = ({
     }
   };
 
+  const handleOpenChangeUsername = () => {
+    setNewUsernameInput(username);
+    setUsernameError(null);
+    setIsChangeUsernameModalOpen(true);
+    setIsProfileMenuOpen(false);
+  };
+
+  const handleSaveUsernameSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const validation = validateUsername(newUsernameInput);
+    if (!validation.isValid) {
+      setUsernameError(validation.error || 'Please enter a valid username.');
+      return;
+    }
+    onChangeUsername(newUsernameInput.trim());
+    setIsChangeUsernameModalOpen(false);
+  };
+
+  const handleOpenClearData = () => {
+    setIsClearDataModalOpen(true);
+    setIsProfileMenuOpen(false);
+  };
+
+  const handleConfirmClearData = () => {
+    setIsClearDataModalOpen(false);
+    onClearLocalData();
+  };
+
   const handleItemClick = (callback: () => void) => {
     callback();
     onCloseMobile();
   };
+
+  const userInitial = username ? username.trim().charAt(0).toUpperCase() : 'U';
 
   const navContent = (
     <div className="flex flex-col h-full justify-between p-4 bg-white select-none relative">
@@ -330,29 +378,60 @@ export const ProgressSidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      {/* User Profile Footer */}
-      <div className="pt-3 pb-1 safe-pb shrink-0 border-t border-[#E9EDE9] mt-2">
-        <div className="flex items-center justify-between p-2 rounded-xl hover:bg-[#FAFAF8] transition cursor-pointer">
+      {/* User Profile Footer with Dropdown Menu */}
+      <div className="pt-3 pb-1 safe-pb shrink-0 border-t border-[#E9EDE9] mt-2 relative" ref={profileMenuRef}>
+        <div
+          onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+          className={`group flex items-center justify-between p-2 rounded-xl transition cursor-pointer ${
+            isProfileMenuOpen ? 'bg-[#FAFAF8]' : 'hover:bg-[#FAFAF8]'
+          }`}
+          title="User Account Options"
+        >
           <div className="flex items-center gap-2.5 min-w-0">
+            {/* Green circular avatar with first letter */}
             <div className="w-8 h-8 rounded-full bg-[#087A50] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
-              S
+              {userInitial}
             </div>
             <div className="flex flex-col min-w-0">
               <span className="text-xs font-bold text-[#202923] truncate leading-tight">
-                Sahil
+                {username || 'User'}
               </span>
-              <span className="text-[10px] text-[#78847D] truncate leading-tight">
-                heybudysahilincode@gmail.com
+              <span className="text-[10px] text-[#78847D] font-medium leading-tight">
+                Free User
               </span>
             </div>
           </div>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#DDF2E8] text-[#087A50] font-bold shrink-0">
-            Pro
-          </span>
+
+          <ChevronDown
+            className={`w-3.5 h-3.5 text-[#78847D] group-hover:text-[#202923] transition-transform shrink-0 ${
+              isProfileMenuOpen ? 'rotate-180 text-[#087A50]' : ''
+            }`}
+          />
         </div>
+
+        {/* User Options Dropdown */}
+        {isProfileMenuOpen && (
+          <div className="absolute bottom-16 left-3 right-3 z-50 bg-white rounded-2xl border border-[#E9EDE9] py-1.5 shadow-xl animate-fadeIn">
+            <button
+              onClick={handleOpenChangeUsername}
+              className="w-full px-3.5 py-2 text-xs font-medium text-[#202923] hover:text-[#087A50] hover:bg-[#FAFAF8] flex items-center gap-2.5 cursor-pointer transition text-left"
+            >
+              <UserPen className="w-4 h-4 text-[#087A50]" />
+              <span>Change Username</span>
+            </button>
+            <div className="my-1 border-t border-[#E9EDE9]" />
+            <button
+              onClick={handleOpenClearData}
+              className="w-full px-3.5 py-2 text-xs font-medium text-[#C77D86] hover:bg-[#FFF5F5] flex items-center gap-2.5 cursor-pointer transition text-left"
+            >
+              <Trash2 className="w-4 h-4 text-[#C77D86]" />
+              <span>Clear Local Data</span>
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Chat Confirmation Modal */}
       {confirmDeleteChatId && (
         <div className="fixed inset-0 z-50 bg-[#202923]/40 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
           <div className="bg-white rounded-2xl p-5 max-w-xs w-full border border-[#E9EDE9] shadow-xl space-y-4">
@@ -383,6 +462,110 @@ export const ProgressSidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
       )}
+
+      {/* Change Username Modal */}
+      {isChangeUsernameModalOpen && (
+        <div className="fixed inset-0 z-50 bg-[#202923]/40 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full border border-[#E9EDE9] shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-[#E9EDE9]">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-[#DDF2E8] text-[#087A50] flex items-center justify-center">
+                  <UserPen className="w-4 h-4" />
+                </div>
+                <h3 className="text-sm font-bold text-[#202923]">Change Username</h3>
+              </div>
+              <button
+                onClick={() => setIsChangeUsernameModalOpen(false)}
+                className="p-1 rounded-lg text-[#78847D] hover:text-[#202923] hover:bg-[#FAFAF8] cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveUsernameSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-[#202923] mb-1.5">
+                  Your Username
+                </label>
+                <input
+                  type="text"
+                  autoFocus
+                  value={newUsernameInput}
+                  onChange={(e) => {
+                    setNewUsernameInput(e.target.value);
+                    if (usernameError) setUsernameError(null);
+                  }}
+                  placeholder="Enter your username"
+                  maxLength={30}
+                  className={`w-full px-3.5 py-2.5 rounded-xl border text-xs text-[#202923] bg-[#FAFAF8] focus:bg-white focus:outline-none transition ${
+                    usernameError
+                      ? 'border-[#C77D86] ring-2 ring-[#C77D86]/15'
+                      : 'border-[#E9EDE9] focus:border-[#087A50] focus:ring-2 focus:ring-[#087A50]/15'
+                  }`}
+                />
+                {usernameError && (
+                  <p className="text-[11px] text-[#C77D86] font-semibold mt-1">
+                    {usernameError}
+                  </p>
+                )}
+                <p className="text-[11px] text-[#78847D] mt-1.5">
+                  Your conversations and resume progress will remain safe.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsChangeUsernameModalOpen(false)}
+                  className="flex-1 py-2.5 rounded-xl border border-[#E9EDE9] text-xs font-semibold text-[#4B5750] hover:bg-[#FAFAF8] cursor-pointer transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 rounded-xl bg-[#087A50] hover:bg-[#065F46] text-white text-xs font-bold cursor-pointer transition shadow-xs"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Clear Local Data Confirmation Modal */}
+      {isClearDataModalOpen && (
+        <div className="fixed inset-0 z-50 bg-[#202923]/40 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full border border-[#E9EDE9] shadow-2xl space-y-4">
+            <div className="text-center">
+              <div className="w-12 h-12 rounded-2xl bg-[#FFF1F2] text-[#C77D86] flex items-center justify-center mx-auto mb-3.5">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-extrabold text-[#202923]">Clear All Local Data?</h3>
+              <p className="text-xs text-[#78847D] mt-2 leading-relaxed text-left bg-[#FAFAF8] p-3 rounded-xl border border-[#E9EDE9]">
+                This action will permanently delete all your saved conversations, resume information, and your username from this browser. This cannot be undone.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsClearDataModalOpen(false)}
+                className="flex-1 py-2.5 rounded-xl border border-[#E9EDE9] text-xs font-semibold text-[#4B5750] hover:bg-[#FAFAF8] cursor-pointer transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmClearData}
+                className="flex-1 py-2.5 rounded-xl bg-[#C77D86] hover:bg-[#b56d76] text-white text-xs font-bold cursor-pointer transition shadow-xs"
+              >
+                Clear All Data
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 
@@ -408,60 +591,71 @@ export const ProgressSidebar: React.FC<SidebarProps> = ({
 
       {/* 3. Desktop / Tablet In-Flow Sidebar */}
       {isCollapsed ? (
-        <aside className="hidden md:flex w-16 h-full bg-white border-r border-[#E9EDE9] flex-col items-center py-4 select-none shrink-0 transition-all duration-200">
+        <aside className="hidden md:flex w-16 h-full bg-white border-r border-[#E9EDE9] flex-col items-center justify-between py-4 select-none shrink-0 transition-all duration-200">
+          <div className="flex flex-col items-center">
+            <button
+              onClick={onToggleCollapse}
+              title="Expand sidebar"
+              className="w-10 h-10 rounded-xl border border-[#E9EDE9] flex items-center justify-center text-[#78847D] hover:text-[#202923] hover:bg-[#FAFAF8] mb-5 cursor-pointer"
+            >
+              <PanelLeft className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={onNewResume}
+              title="New Chat"
+              className="w-10 h-10 rounded-xl bg-[#087A50] hover:bg-[#065F46] flex items-center justify-center text-white mb-4 cursor-pointer shadow-xs"
+            >
+              <Plus className="w-4 h-4 stroke-[2.5]" />
+            </button>
+
+            <div className="space-y-2 flex flex-col items-center">
+              <button
+                onClick={onSelectChat}
+                title="Chat Assistant"
+                className={`w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer transition-all ${
+                  activeTab === 'chat'
+                    ? 'bg-[#DDF2E8] text-[#087A50]'
+                    : 'text-[#78847D] hover:bg-[#FAFAF8] hover:text-[#202923]'
+                }`}
+              >
+                <MessageSquare className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={onOpenTemplates}
+                title="Resume Templates"
+                className={`w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer transition-all ${
+                  activeTab === 'templates'
+                    ? 'bg-[#DDF2E8] text-[#087A50]'
+                    : 'text-[#78847D] hover:bg-[#FAFAF8] hover:text-[#202923]'
+                }`}
+              >
+                <Layout className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={onOpenMyResumes}
+                title="My Resumes"
+                className={`w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer transition-all ${
+                  activeTab === 'resumes'
+                    ? 'bg-[#DDF2E8] text-[#087A50]'
+                    : 'text-[#78847D] hover:bg-[#FAFAF8] hover:text-[#202923]'
+                }`}
+              >
+                <FileText className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Collapsed user avatar button */}
           <button
             onClick={onToggleCollapse}
-            title="Expand sidebar"
-            className="w-10 h-10 rounded-xl border border-[#E9EDE9] flex items-center justify-center text-[#78847D] hover:text-[#202923] hover:bg-[#FAFAF8] mb-5 cursor-pointer"
+            title={`${username || 'User'} (Free User) - Click to expand`}
+            className="w-9 h-9 rounded-full bg-[#087A50] text-white flex items-center justify-center font-bold text-xs cursor-pointer shadow-xs hover:scale-105 transition"
           >
-            <PanelLeft className="w-4 h-4" />
+            {userInitial}
           </button>
-
-          <button
-            onClick={onNewResume}
-            title="New Chat"
-            className="w-10 h-10 rounded-xl bg-[#087A50] hover:bg-[#065F46] flex items-center justify-center text-white mb-4 cursor-pointer shadow-xs"
-          >
-            <Plus className="w-4 h-4 stroke-[2.5]" />
-          </button>
-
-          <div className="space-y-2 flex flex-col items-center">
-            <button
-              onClick={onSelectChat}
-              title="Chat Assistant"
-              className={`w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer transition-all ${
-                activeTab === 'chat'
-                  ? 'bg-[#DDF2E8] text-[#087A50]'
-                  : 'text-[#78847D] hover:bg-[#FAFAF8] hover:text-[#202923]'
-              }`}
-            >
-              <MessageSquare className="w-4 h-4" />
-            </button>
-
-            <button
-              onClick={onOpenTemplates}
-              title="Resume Templates"
-              className={`w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer transition-all ${
-                activeTab === 'templates'
-                  ? 'bg-[#DDF2E8] text-[#087A50]'
-                  : 'text-[#78847D] hover:bg-[#FAFAF8] hover:text-[#202923]'
-              }`}
-            >
-              <Layout className="w-4 h-4" />
-            </button>
-
-            <button
-              onClick={onOpenMyResumes}
-              title="My Resumes"
-              className={`w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer transition-all ${
-                activeTab === 'resumes'
-                  ? 'bg-[#DDF2E8] text-[#087A50]'
-                  : 'text-[#78847D] hover:bg-[#FAFAF8] hover:text-[#202923]'
-              }`}
-            >
-              <FileText className="w-4 h-4" />
-            </button>
-          </div>
         </aside>
       ) : (
         <aside className="hidden md:flex md:w-[280px] lg:w-[300px] xl:w-[320px] h-full bg-white border-r border-[#E9EDE9] flex-col select-none shrink-0 transition-all duration-200 overflow-hidden">

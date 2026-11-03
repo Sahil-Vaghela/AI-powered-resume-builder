@@ -333,3 +333,66 @@ export function hasSavedProgress(): boolean {
 export function getSampleResume(): ResumeData {
   return sampleResume as ResumeData;
 }
+
+// ---------------- USERNAME & ACCESS MANAGEMENT ----------------
+export const USERNAME_STORAGE_KEY = 'resumecraft_username';
+
+export function validateUsername(username: string): { isValid: boolean; error?: string } {
+  const trimmed = username ? username.trim() : '';
+  if (!trimmed) {
+    return { isValid: false, error: 'Username is required.' };
+  }
+  if (trimmed.length < 2) {
+    return { isValid: false, error: 'Username must be at least 2 characters.' };
+  }
+  if (trimmed.length > 30) {
+    return { isValid: false, error: 'Username cannot exceed 30 characters.' };
+  }
+  // Allow letters, numbers, spaces, and common name characters (apostrophe, dash, dot, underscore)
+  const validPattern = /^[a-zA-Z0-9\s._'-]+$/;
+  if (!validPattern.test(trimmed)) {
+    return { isValid: false, error: 'Username can only contain letters, numbers, spaces, and common name characters.' };
+  }
+  return { isValid: true };
+}
+
+export function getStoredUsername(): string | null {
+  try {
+    const raw = localStorage.getItem(USERNAME_STORAGE_KEY);
+    if (!raw) return null;
+    const trimmed = raw.trim();
+    return trimmed.length >= 2 ? trimmed : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveStoredUsername(username: string): void {
+  try {
+    localStorage.setItem(USERNAME_STORAGE_KEY, username.trim());
+  } catch (e) {
+    console.error('Failed to save username to localStorage', e);
+  }
+}
+
+export function removeStoredUsername(): void {
+  try {
+    localStorage.removeItem(USERNAME_STORAGE_KEY);
+  } catch (e) {
+    console.error('Failed to remove username from localStorage', e);
+  }
+}
+
+export function clearAllLocalData(): void {
+  try {
+    localStorage.removeItem(USERNAME_STORAGE_KEY);
+    localStorage.removeItem(CHAT_STORE_KEY);
+    Object.values(LEGACY_KEYS).forEach((key) => {
+      try {
+        localStorage.removeItem(key);
+      } catch {}
+    });
+  } catch (e) {
+    console.error('Failed to clear local data from localStorage', e);
+  }
+}

@@ -28,7 +28,11 @@ import {
   renameChatInStore,
   deleteChatFromStore,
   generateChatTitle,
+  getStoredUsername,
+  saveStoredUsername,
+  clearAllLocalData,
 } from '../engine/storageEngine';
+import { UsernameWelcome } from '../components/UsernameWelcome';
 import sectionsData from '../data/resume-sections.json';
 import chatbotResponses from '../data/chatbot-responses.json';
 import { X } from 'lucide-react';
@@ -90,6 +94,40 @@ export const Builder: React.FC<BuilderProps> = ({ initialResumeData }) => {
   const [showTemplatesModal, setShowTemplatesModal] = useState<boolean>(false);
   const [showResumeModal, setShowResumeModal] = useState<boolean>(false);
   const [showEditorModal, setShowEditorModal] = useState<boolean>(false);
+
+  // Open Access Username State
+  const [username, setUsername] = useState<string | null>(() => getStoredUsername());
+
+  const handleUsernameComplete = (newUsername: string) => {
+    saveStoredUsername(newUsername);
+    setUsername(newUsername);
+  };
+
+  const handleChangeUsername = (newName: string) => {
+    saveStoredUsername(newName);
+    setUsername(newName);
+  };
+
+  const handleClearLocalData = () => {
+    clearAllLocalData();
+    const freshChat = createNewChatSession();
+    const freshStore: ChatHistoryStore = {
+      chats: [freshChat],
+      activeChatId: freshChat.id,
+    };
+    saveChatHistory(freshStore);
+    setChatStore(freshStore);
+    setResume(freshChat.resumeData);
+    setMessages(freshChat.messages);
+    setCurrentQuestionId(freshChat.conversationState.currentQuestionId);
+    setCurrentRecord({});
+    setQuestionHistory([]);
+    setHasStarted(false);
+    setShowResumeModal(false);
+    setShowTemplatesModal(false);
+    setShowEditorModal(false);
+    setUsername(null);
+  };
 
   // Keep a ref to activeChat to avoid stale closures in effects
   const activeChatIdRef = useRef<string | null>(chatStore.activeChatId);
@@ -452,6 +490,11 @@ export const Builder: React.FC<BuilderProps> = ({ initialResumeData }) => {
     setHasStarted(true);
   };
 
+  // If no username exists, show the First-Time Welcome Screen
+  if (!username) {
+    return <UsernameWelcome onComplete={handleUsernameComplete} />;
+  }
+
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#FAFAF8] font-sans">
       {/* 1. LEFT SIDEBAR WITH CHAT HISTORY */}
@@ -471,6 +514,9 @@ export const Builder: React.FC<BuilderProps> = ({ initialResumeData }) => {
         onSelectChatSession={handleSelectChatSession}
         onRenameChat={handleRenameChat}
         onDeleteChat={handleDeleteChat}
+        username={username}
+        onChangeUsername={handleChangeUsername}
+        onClearLocalData={handleClearLocalData}
       />
 
       {/* 2. MAIN CHATGPT-STYLE WORKSPACE */}
